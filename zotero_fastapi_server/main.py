@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
@@ -5,6 +6,9 @@ from starlette.middleware.cors import CORSMiddleware
 from zotero_fastapi_server.api.main import api_router
 from zotero_fastapi_server.core.config import settings
 
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.tags[0]}-{route.name}"

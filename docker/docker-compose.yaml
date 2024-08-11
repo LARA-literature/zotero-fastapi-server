@@ -1,0 +1,29 @@
+# docker compose file for mongodb
+# https://hub.docker.com/_/mongo
+# https://docs.mongodb.com/manual/reference/configuration-options/
+
+# mongodb/mongodb-community-server
+# https://hub.docker.com/r/mongo/mongodb-community-server
+
+
+services:
+  mongodb:
+    #image: mongodb/mongodb-community-server
+    image: mongo:latest
+    container_name: mongodb
+    #restart: always
+    restart: on-failure
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb_data:/data/db
+      - ./mongoconfig:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: yxcv4321
+      MONGO_INITDB_DATABASE: admin
+    
+volumes:
+  mongodb_data:
+  mongoconfig:
+    

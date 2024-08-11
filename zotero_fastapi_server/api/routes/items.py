@@ -19,13 +19,13 @@ async def read_item(item_id: str):
 
 @router.post("/", response_model=ItemSchema)
 async def create_item_endpoint(item: ItemSchema):
-    new_item = Item(**item.dict())
+    new_item = Item(**item.model_dump())
     created_item = await create_item(new_item)
     return created_item
 
 @router.put("/{item_id}", response_model=ItemSchema)
 async def update_item_endpoint(item_id: str, item: ItemSchema):
-    updated_item = Item(**item.dict())
+    updated_item = Item(**item.model_dump())
     updated = await update_item(item_id, updated_item)
     if updated is None:
         raise HTTPException(status_code=404, detail="Item not found")
