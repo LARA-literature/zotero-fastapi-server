@@ -49,6 +49,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
 
+    MONGODB_URI: str = "mongodb://localhost:27017"
+    DATABASE_NAME: str = "zotero_db"
+
     # Postgres Database
     # POSTGRES_SERVER: str
     # POSTGRES_PORT: int = 5432
@@ -87,6 +90,9 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: str
     FIRST_SUPERUSER_PASSWORD: str
     USERS_OPEN_REGISTRATION: bool = False
+
+    # class Config:
+    #     env_file = ".env"
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":

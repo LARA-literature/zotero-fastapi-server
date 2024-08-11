@@ -1,16 +1,16 @@
 # MongoDB connection
 
-import os
+
 from motor.motor_asyncio import AsyncIOMotorClient
-from dotenv import load_dotenv
+from zotero_fastapi_server.core.config import settings
 
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
+# MONGO_URI = os.getenv("MONGO_URI")
 
-MONGO_URI = os.getenv("MONGO_URI")
+client = AsyncIOMotorClient(settings.MONGODB_URI)
 
-client = AsyncIOMotorClient(MONGO_URI)
-
-database = client.zotero
+database = client[settings.DATABASE_NAME]  #client.zotero
 item_collection = database.get_collection("items")
 
 # ping database
