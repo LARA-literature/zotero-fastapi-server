@@ -114,3 +114,5 @@ bin/
 *.cer
 *.crt
 *.key
+
+docker/certs/

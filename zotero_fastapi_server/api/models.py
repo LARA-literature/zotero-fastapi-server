@@ -62,7 +62,7 @@ class Item(BaseModel):
     dateModified: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ItemResponse(BaseModel):
     key: str
@@ -73,10 +73,44 @@ class ItemResponse(BaseModel):
     data: Data
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class ItemCreate(BaseModel):
+    key: str
+    version: int
+    library: LibraryInfo
+    links: Links
+    meta: Meta
+    data: Data
 
 
 
+class CollectionData(BaseModel):
+    key: str
+    version: int
+    name: str
+    parentCollection: bool = False
+    relations: Dict = {}
 
+class CollectionMeta(BaseModel):
+    numCollections: int
+    numItems: int = 0
 
+class CollectionResponse(BaseModel):
+    key: str
+    version: int
+    library: LibraryInfo
+    links: Links
+    meta: CollectionMeta
+    data: CollectionData
 
+    class Config:
+        from_attributes = True
+
+class CreateCollection(BaseModel):
+    key: str
+    version: int
+    library: LibraryInfo
+    links: Links
+    meta: CollectionMeta
+    data: CollectionData

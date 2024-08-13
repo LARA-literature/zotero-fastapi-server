@@ -7,6 +7,27 @@
 
 
 services:
+  # zotero-api:
+  #   image: tiangolo/uvicorn-gunicorn-fastapi:python3.9  # or any FastAPI image
+  #   volumes:
+  #     - .:/app
+  #   expose:
+  #     - "8000"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs
+      - ./frontend:/usr/share/nginx/html  # Serve the zotero React frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    network_mode: 
+      host
+    # depends_on:
+    #   - zotero-api
+
   mongodb:
     #image: mongodb/mongodb-community-server
     image: mongo:latest
@@ -27,3 +48,7 @@ volumes:
   mongodb_data:
   mongoconfig:
     
+# networks:
+#   default:
+#     external:
+#       name: host

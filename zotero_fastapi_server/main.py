@@ -32,4 +32,8 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_headers=["*"],
     )
 
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix="")
+
+@app.get("/api",  tags = ["root"])
+async def root():
+    return {"message": "Welcome to the Zotero API using FastAPI and MongoDB"}

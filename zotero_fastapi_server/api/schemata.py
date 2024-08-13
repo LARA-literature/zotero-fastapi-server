@@ -1,13 +1,13 @@
-def individual_serializer(book) -> dict:
-    return {
-        "id": str(book["_id"]),
-        "title": book["title"],
-        "description": book["description"],
-        "borrowed": book["borrowed"]
-    }
+# def individual_serializer(book) -> dict:
+#     return {
+#         "id": str(book["_id"]),
+#         "title": book["title"],
+#         "description": book["description"],
+#         "borrowed": book["borrowed"]
+#     }
  
-def books_serializer(books) -> list:
-    return [individual_serializer(book) for book in books]
+# def books_serializer(books) -> list:
+#     return [individual_serializer(book) for book in books]
 
 
 from pydantic import BaseModel
@@ -34,4 +34,4 @@ class ItemSchema(BaseModel):
     dateModified: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

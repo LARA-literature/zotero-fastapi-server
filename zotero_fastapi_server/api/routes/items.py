@@ -1,15 +1,18 @@
-from fastapi import APIRouter, HTTPException
+
+from fastapi import APIRouter, Response, HTTPException, status
+
+
 from typing import List
 from ..database import database as db
-from ..models import Item, ItemResponse
+from ..models import Item, ItemCreate, ItemResponse
 from ..schemata import ItemSchema
 from ..crud import (
     get_all_items, get_top_level_items, get_trashed_items, get_item, create_item,
-    get_child_items, get_publication_items, get_items_in_collection,
-    get_top_items_in_collection
+    get_child_items, get_publication_items
 )
 
 router = APIRouter()
+
 
 # Route to get all items (excluding trash)
 @router.get("/items", response_model=List[ItemResponse])
@@ -19,11 +22,27 @@ async def list_all_items():
         raise HTTPException(status_code=404, detail="No items found")
     return items
 
-@router.post("/items", response_model=ItemSchema)
-async def create_item_endpoint(item: ItemSchema):
-     new_item = Item(**item.model_dump())
-     created_item = await create_item(db, new_item)
-     return created_item
+# @router.post("/items", response_model=ItemSchema)
+# async def create_item_endpoint(item: ItemSchema):
+#      new_item = Item(**item.model_dump())
+#      created_item = await create_item(db, new_item)
+#      return created_item
+
+# POST route to create a new item
+@router.post("/items", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
+async def create_new_item(item: ItemCreate):
+    """
+    Create a new item in the library.
+    """
+    item_id = await create_item(db, item)
+
+    print("***** - id:", item_id)
+    if not item_id:
+        raise HTTPException(status_code=400, detail="Failed to create item")
+    
+    # Retrieve the item after insertion to ensure the correct response structure
+    created_item = await db.items.find_one({"_id": item_id})
+    return ItemResponse(**created_item)
 
 # Route to get all top-level items
 @router.get("/items/top", response_model=List[ItemResponse])
@@ -65,21 +84,6 @@ async def list_publication_items():
         raise HTTPException(status_code=404, detail="No publication items found")
     return items
 
-# Route to get items in a specific collection
-@router.get("/collections/{collection_id}/items", response_model=List[ItemResponse])
-async def list_items_in_collection(collection_id: str):
-    items = await get_items_in_collection(db, collection_id)
-    if not items:
-        raise HTTPException(status_code=404, detail="No items found in this collection")
-    return items
-
-# Route to get top-level items in a specific collection
-@router.get("/collections/{collection_id}/items/top", response_model=List[ItemResponse])
-async def list_top_items_in_collection(collection_id: str):
-    items = await get_top_items_in_collection(db, collection_id)
-    if not items:
-        raise HTTPException(status_code=404, detail="No top-level items found in this collection")
-    return items
 
 
 ## old code
